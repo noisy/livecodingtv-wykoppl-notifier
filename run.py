@@ -42,7 +42,7 @@ for stream in pl_streams:
     response = api.add_entry("""
         Livestream: [{title}]({stream_url})
         Autor: {author}
-        #[test](http://www.wykop.pl/tag/test/) {programming_tags}
+        #livecodingtv #[test](http://www.wykop.pl/tag/test/) {programming_tags}
 
         """.format(
             title=stream['title'],
