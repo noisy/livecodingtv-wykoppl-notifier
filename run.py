@@ -2,6 +2,13 @@
 import os
 import wykop
 import requests
+################################################
+# TODO:
+# v bigger thumbnails (1024_576)
+# - simple database (SQLite?)
+# - custom tags per author, transmission, project to subscribe or ignore
+# - proper authorization
+# - stats
 
 ################################################
 api = wykop.WykopAPI(
@@ -37,12 +44,13 @@ for stream in pl_streams:
     tags = [tag.lower() for tag in tags.replace(',', '').split()]
     tags = [tag for tag in tags if tag in programming_languages]
 
-    thumb_url = requests.get(stream['thumbnail_url']).url
+    thumb_url = stream['thumbnail_url'].replace('_250_140/', '_1024_576/')
+    final_thumb_url = requests.get(thumb_url).url  # resolve redirect
 
     response = api.add_entry("""
         Livestream: [{title}]({stream_url})
         Autor: {author}
-        #livecodingtv #[test](http://www.wykop.pl/tag/test/) {programming_tags}
+        #livecodingtv {programming_tags}
 
         """.format(
             title=stream['title'],
@@ -52,7 +60,7 @@ for stream in pl_streams:
                 ['#[{tag}](http://www.wykop.pl/tag/{tag}/)'.format(tag=tag) for tag in tags]
             )
         ),
-        embed=thumb_url
+        embed=final_thumb_url
     )
 
     print str(response)
